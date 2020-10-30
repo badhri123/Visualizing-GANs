@@ -76,3 +76,5 @@ build_mesh(model, (input_train, target_train), grid_length=40, verbose=1)
 # build_mesh(model, (input_train, target_train), grid_length=40, verbose=1)
 
 import numpy as np
+plot_contour(key="sparse_categorical_crossentropy")
+plot_3d(key="sparse_categorical_crossentropy")
