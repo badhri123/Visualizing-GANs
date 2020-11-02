@@ -3,6 +3,7 @@ import logging
 import numpy as np
 import os
 import gc
+import math
 import resource
 import tensorflow as tf
 
@@ -146,7 +147,11 @@ def build_mesh(model, data, grid_length, extension=1, filename="meshfile", use_m
           Z.append(_obj_fn(model, data, solution))
 
     Z = np.array(Z)
-    print(Z)
+    # for i in range(len(Z)):
+    #   if math.isnan(Z[i])==True:
+    #     Z[i] = 10.0
+
+    # print(Z)
     os.makedirs('./files', exist_ok=True)
 
     with h5py.File("./files/{}.hdf5".format(filename), "w") as f:
