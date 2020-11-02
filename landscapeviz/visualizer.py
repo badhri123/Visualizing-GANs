@@ -61,7 +61,7 @@ def plot_3d(key, filename=FILENAME, log=False, save=False):
     if log:
         Z = np.log(Z + 0.1)
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111, projection='3d')
 
     # Plot the surface.

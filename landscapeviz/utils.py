@@ -102,12 +102,14 @@ def _obj_fn(model, data, solution):
     old_weights = model.get_weights()
     model.set_weights(solution)
     value = model.evaluate(data[0], data[1], verbose=0)
+    if type(value)==float:
+      value = [value]
     model.set_weights(old_weights)
 
     return value
 
 
-def build_mesh(model, data, grid_length, extension=1, filename="meshfile", verbose=True, seed=None, trajectory=None):
+def build_mesh(model, data, grid_length, extension=1, filename="meshfile", use_mask=False,mask=None, verbose=True, seed=None, trajectory=None):
 
     logging.basicConfig(level=logging.INFO)
 
@@ -120,29 +122,39 @@ def build_mesh(model, data, grid_length, extension=1, filename="meshfile", verbo
         model, seed=seed, trajectory=trajectory)
     space = np.linspace(-extension, extension, grid_length)
 
+    
     X, Y = np.meshgrid(space, space)
-
     for i in range(grid_length):
         if verbose:
             logging.info("line {} out of {}".format(i, grid_length))
-
+        
         for j in range(grid_length):
-            solution = [
-                origin[x] + X[i][j] * vector_x[x] +
-                Y[i][j] * vector_y[x]
-                for x in range(len(origin))
-            ]
+          solution = []
+          for x in range(len(origin)):
+            if use_mask==True:
+              solution.append(origin[x] + (X[i][j] * mask[x]*vector_x[x]) + (Y[i][j] * mask[x]*vector_y[x]))
+            else:
+              solution.append(origin[x] + X[i][j] * vector_x[x] + Y[i][j] * vector_y[x])
 
-            Z.append(_obj_fn(model, data, solution))
+            
+            # solution = [
+            #     origin[x] + X[i][j] * vector_x[x] +
+            #     Y[i][j] * vector_y[x]
+            #     for x in range(len(origin))
+            # ]
+
+          Z.append(_obj_fn(model, data, solution))
 
     Z = np.array(Z)
+    print(Z)
     os.makedirs('./files', exist_ok=True)
 
     with h5py.File("./files/{}.hdf5".format(filename), "w") as f:
 
         f["space"] = space
         original_results = _obj_fn(model, data, origin)
-
+        if type(original_results)==float:
+          original_results=[original_results]
         for i, metric in enumerate(z_keys):
             f["original_" + metric] = original_results[i]
             f[metric] = Z[:, i].reshape(X.shape)
@@ -150,4 +162,5 @@ def build_mesh(model, data, grid_length, extension=1, filename="meshfile", verbo
 
     del Z
     gc.collect()
+
 
