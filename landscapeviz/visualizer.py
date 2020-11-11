@@ -2,6 +2,8 @@ import h5py
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import math
+from scipy import io
 
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -57,10 +59,36 @@ def plot_grid(key, filename=FILENAME, save=False):
 def plot_3d(key, filename=FILENAME, log=False, save=False):
 
     X, Y, Z = _fetch_data(key, filename)
+    xlist=[]
+    ylist=[]
+    zlist=[]
+    # for i in range(len(X)):
+    #   xlist.append(X[i])
+    #   ylist.append(Y[i])
+    #   zlist.append(Z[i])
+    
 
     if log:
         Z = np.log(Z + 0.1)
+    maxi=-1
+    for i in range(Z.shape[0]):
 
+      for j in range(Z.shape[1]):
+        if maxi<Z[i][j]:
+          maxi=Z[i][j]
+
+        # if math.isnan(Z[i][j])==True:
+        #   Z[i][j] = 5
+ 
+    for i in range(Z.shape[0]):
+
+      for j in range(Z.shape[1]):
+
+        if math.isnan(Z[i][j])==True:
+          Z[i][j] = 5*maxi
+
+          
+    print(Z.shape)
     fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111, projection='3d')
 
@@ -73,4 +101,5 @@ def plot_3d(key, filename=FILENAME, log=False, save=False):
         fig.savefig("./surface.svg")
 
     plt.show()
+    return X,Y,Z
 
