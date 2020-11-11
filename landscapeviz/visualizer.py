@@ -87,7 +87,6 @@ def plot_3d(key, filename=FILENAME, log=False, save=False):
         if math.isnan(Z[i][j])==True:
           Z[i][j] = 5*maxi
 
-          
     print(Z.shape)
     fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111, projection='3d')
