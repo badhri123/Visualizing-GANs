@@ -6,11 +6,10 @@
   <img width="450" height="350" src="/docs/img/surface_hinge.svg">
 </p>
 
-This repository is an implementation of the paper
+This repository is an implementation of the following paper and also an extension of the implementation to GAN Visualization.
 
 > Hao Li, Zheng Xu, Gavin Taylor, Christoph Studer and Tom Goldstein. [*Visualizing the Loss Landscape of Neural Nets*](https://arxiv.org/abs/1712.09913). NIPS, 2018.
 
-This code was implemented in tensorflow 2.0. The authors also have an [implementation](https://github.com/tomgoldstein/loss-landscape) using pytorch.
 
 ## How to use
 ```python
